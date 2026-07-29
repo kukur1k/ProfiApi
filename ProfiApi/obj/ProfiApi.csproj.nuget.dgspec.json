@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\C#_Project\\PROFI_TRENNING\\ProfiApi\\ProfiApi\\ProfiApi.csproj": {}
+    "C:\\ProfiProjects\\ProfiApi\\ProfiApi\\ProfiApi.csproj": {}
   },
   "projects": {
-    "D:\\C#_Project\\PROFI_TRENNING\\ProfiApi\\ProfiApi\\ProfiApi.csproj": {
+    "C:\\ProfiProjects\\ProfiApi\\ProfiApi\\ProfiApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\C#_Project\\PROFI_TRENNING\\ProfiApi\\ProfiApi\\ProfiApi.csproj",
+        "projectUniqueName": "C:\\ProfiProjects\\ProfiApi\\ProfiApi\\ProfiApi.csproj",
         "projectName": "ProfiApi",
-        "projectPath": "D:\\C#_Project\\PROFI_TRENNING\\ProfiApi\\ProfiApi\\ProfiApi.csproj",
+        "projectPath": "C:\\ProfiProjects\\ProfiApi\\ProfiApi\\ProfiApi.csproj",
         "packagesPath": "C:\\Users\\pc\\.nuget\\packages\\",
-        "outputPath": "D:\\C#_Project\\PROFI_TRENNING\\ProfiApi\\ProfiApi\\obj\\",
+        "outputPath": "C:\\ProfiProjects\\ProfiApi\\ProfiApi\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +26,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/kukur1k/index.json": {}
         },
         "frameworks": {
           "net10.0": {

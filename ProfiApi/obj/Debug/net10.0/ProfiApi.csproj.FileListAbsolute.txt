@@ -169,3 +169,4 @@ D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\obj\Debug\net10.0\refint\ProfiApi
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\obj\Debug\net10.0\ProfiApi.pdb
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\obj\Debug\net10.0\ProfiApi.genruntimeconfig.cache
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\obj\Debug\net10.0\ref\ProfiApi.dll
+D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\obj\Debug\net10.0\ProfiApi.sourcelink.json

@@ -1,4 +1,4 @@
-namespace APIChemp.DTOs;
+namespace ProfiApi.DTOs;
 
 public record ApiResponce<T>(
     bool success,

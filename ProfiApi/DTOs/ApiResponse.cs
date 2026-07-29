@@ -18,9 +18,14 @@ public static class Api
     public static IResult Fail(int status, string message, string errorCode) =>
         Results.Json(new ApiResponce<object>(false, null, message, errorCode), statusCode: status);
 
-    public static IResult BadRequest(string message) => Fail(400, message, "BAD_REQUEST");
-    public static IResult Unauthorized() => Fail(401, "Не авторизован", "UNAUTHORIZED");
-    public static IResult Forbidden() => Fail(403, "Нет доступа", "FORBIDDEN");
-    public static IResult NotFound(string message) => Fail(404, message, "NOT_FOUND");
-    public static IResult Conflict(string message) => Fail(409, message, "CONFLICT");
+    public static IResult BadRequest(string message)
+        => Fail(400, message, "BAD_REQUEST");
+    public static IResult Unauthorized()
+        => Fail(401, "Не авторизован", "UNAUTHORIZED");
+    public static IResult Forbidden()
+        => Fail(403, "Нет доступа", "FORBIDDEN");
+    public static IResult NotFound(string message)
+        => Fail(404, message, "NOT_FOUND");
+    public static IResult Conflict(string message)
+        => Fail(409, message, "CONFLICT");
 }

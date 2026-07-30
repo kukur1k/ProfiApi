@@ -93,8 +93,32 @@ public static class ApiEndpoints
             }
             return Api.Ok<object?>(null, "Выход выполнен");
         });
+
+        g.MapPost("/refresh", async (RefreshRequest req, AppDbContext db, JwtService jwt) =>
+        {
+            if (string.IsNullOrWhiteSpace(req.RefreshToken))
+                return Api.BadRequest("RefreshToken обязателен");
+
+            var token = await db.RefreshTokens
+                .Include(t => t.User).ThenInclude(u => u.IdRoleNavigation)
+                .FirstOrDefaultAsync(t => t.Token == req.RefreshToken);
+
+            if (token is null || token.IsRevoked == true || token.ExpiresAt < DateTimeOffset.UtcNow)
+            {
+                return Api.Fail(401, "Токен недействителен или истёк", "INVALID_REFRESH_TOKEN");
+            }
+
+            token.IsRevoked = true;
+            var newRefresh = await CreateRefreshToken(token.UserId!.Value, db);
+
+            return Api.Ok(new AuthResponce(
+                jwt.Generate(token.User),
+                newRefresh.Token,
+                token.User.IdRoleNavigation.Title
+            ));
+        });
     }
-    
+
     // ===Метод для создания рефреш токена===
         static async Task<RefreshToken> CreateRefreshToken(int userId, AppDbContext db)
         {

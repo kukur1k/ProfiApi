@@ -53,7 +53,7 @@ builder.Services.AddSwaggerGen(c =>
     // Servers
     c.AddServer(new OpenApiServer
     {
-        Url = "http://localhost:5004",
+        Url = "http://localhost:5222",
         Description = "Local development"
     });
 

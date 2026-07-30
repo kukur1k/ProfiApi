@@ -51,12 +51,12 @@ public static class ApiEndpoints
             var err = Validator.Check(Validator.Validate(req));
             if (err is not null) return err;
 
-            var user = db.Users
+            var user = await db.Users
                 .Include(u => u.IdRoleNavigation)
                 .FirstOrDefaultAsync(u => u.Email == req.Email);
 
             if (user is not null)
-                return Api.Fail(401, "Данный Email уже заркгестрирован", "INVALID_CREDENTIALS");
+                return Api.Fail(401, "Данный Email уже зарегестрирован", "INVALID_CREDENTIALS");
 
             var newUser = new User()
             {

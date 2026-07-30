@@ -50,6 +50,8 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //===Схема в БД Profi1===
+        modelBuilder.HasDefaultSchema("Profi1");
         modelBuilder.HasPostgresExtension("pg_catalog", "adminpack");
 
         modelBuilder.Entity<Company>(entity =>

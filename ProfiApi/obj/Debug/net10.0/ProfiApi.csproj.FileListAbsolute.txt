@@ -28,7 +28,6 @@ D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\ProfiApi.pdb
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\BCrypt-Net-Next.dll
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\Humanizer.dll
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\Microsoft.Build.Framework.dll
 D:\C#_Project\PROFI_TRENNING\ProfiApi\ProfiApi\bin\Debug\net10.0\Microsoft.CodeAnalysis.dll

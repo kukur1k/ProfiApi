@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using ProfiApi.Data;
 using ProfiApi.DTOs;
@@ -43,6 +44,37 @@ public static class ApiEndpoints
                 jwt.Generate(user), refresh.Token, user.IdRoleNavigation.Title
             ));
 
+        }).AllowAnonymous();
+
+        g.MapPost("/register", async (RegisterRequest req, AppDbContext db, JwtService jwt) =>
+        {
+            var err = Validator.Check(Validator.Validate(req));
+            if (err is not null) return err;
+
+            var user = db.Users
+                .Include(u => u.IdRoleNavigation)
+                .FirstOrDefaultAsync(u => u.Email == req.Email);
+
+            if (user is not null)
+                return Api.Fail(401, "Данный Email уже заркгестрирован", "INVALID_CREDENTIALS");
+
+            var newUser = new User()
+            {
+                Email = req.Email,
+                PasswordHash = BC.HashPassword(req.Password),
+                FirstName = req.FirstName,
+                LastName = req.LastName,
+                MiddleName = req.MiddleName,
+                IdRole = 1
+            };
+
+            await db.Users.AddAsync(newUser);
+            await db.SaveChangesAsync();
+            await db.Entry(newUser).Reference(u => u.IdRoleNavigation).LoadAsync();
+            var refresh = await CreateRefreshToken(newUser.Id, db);
+            return Api.Ok(new AuthResponce(
+                jwt.Generate(newUser), refresh.Token, newUser.IdRoleNavigation.Title
+            ));
         }).AllowAnonymous();
 
         // ===Метод для создания рефреш токена===

@@ -78,7 +78,24 @@ public static class ApiEndpoints
             ));
         }).AllowAnonymous();
 
-        // ===Метод для создания рефреш токена===
+        g.MapPost("/logout", async (RefreshRequest req, AppDbContext db) =>
+        {
+            if (string.IsNullOrWhiteSpace(req.RefreshToken))
+                return Api.BadRequest("RefreshToken обязателен");
+
+            var token = await db.RefreshTokens
+                .FirstOrDefaultAsync(t => t.Token == req.RefreshToken && t.IsRevoked != true);
+
+            if (token is not null)
+            {
+                token.IsRevoked = true;
+                await db.SaveChangesAsync();
+            }
+            return Api.Ok<object?>(null, "Выход выполнен");
+        });
+    }
+    
+    // ===Метод для создания рефреш токена===
         static async Task<RefreshToken> CreateRefreshToken(int userId, AppDbContext db)
         {
             var token = new RefreshToken
@@ -92,5 +109,4 @@ public static class ApiEndpoints
             await db.SaveChangesAsync();
             return token;
         }
-    }
 }

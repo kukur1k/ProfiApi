@@ -65,6 +65,7 @@ public static class ApiEndpoints
                 FirstName = req.FirstName,
                 LastName = req.LastName,
                 MiddleName = req.MiddleName,
+                Phone = req.Phone,
                 IdRole = 1
             };
 

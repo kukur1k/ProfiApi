@@ -8,14 +8,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ba33b06f-fe4c-45c7-abd8-fed8e583b271" name="Changes" comment="" />
+    <list default="true" id="ba33b06f-fe4c-45c7-abd8-fed8e583b271" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/DTOs.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/bin/Debug/net10.0/ProfiApi.dll" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/bin/Debug/net10.0/ProfiApi.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/bin/Debug/net10.0/ProfiApi.exe" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/bin/Debug/net10.0/ProfiApi.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/bin/Debug/net10.0/ProfiApi.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/bin/Debug/net10.0/ProfiApi.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.dll" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ProfiApi.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/apphost.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ref/ProfiApi.dll" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/ref/ProfiApi.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/refint/ProfiApi.dll" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/refint/ProfiApi.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProfiApi/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/ProfiApi/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/JwtService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/ValidationService.cs" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
+  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -37,21 +59,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.ProfiApi: http.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.ProfiApi: http">
     <configuration name="ProfiApi: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ProfiApi/ProfiApi.csproj" />
@@ -95,6 +118,7 @@
       <updated>1785178286647</updated>
       <workItem from="1785178289294" duration="1294000" />
       <workItem from="1785356239671" duration="2000" />
+      <workItem from="1785412440676" duration="249000" />
     </task>
     <servers />
   </component>

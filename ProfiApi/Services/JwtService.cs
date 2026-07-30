@@ -27,7 +27,7 @@ public class JwtService(IConfiguration config)
             issuer: config["Jwt:Issuer"],
             audience: config["Jwt:Audience"],
             claims: claims,
-            CngExportPolicies: DateTime.UtcNow.AddHours(8),
+            expires: DateTime.UtcNow.AddHours(8),
             signingCredentials: creds
         );
 

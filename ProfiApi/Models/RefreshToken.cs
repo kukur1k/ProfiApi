@@ -21,8 +21,8 @@ public partial class RefreshToken
     [StringLength(500)]
     public string Token { get; set; } = null!;
 
-    [Column("expires_at", TypeName = "timestamp without time zone")]
-    public DateTime ExpiresAt { get; set; }
+    [Column("expires_at")]
+    public DateTimeOffset ExpiresAt { get; set; }
 
     [Column("created_at", TypeName = "timestamp without time zone")]
     public DateTime? CreatedAt { get; set; }

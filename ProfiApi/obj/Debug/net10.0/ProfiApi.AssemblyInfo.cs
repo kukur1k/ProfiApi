@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProfiApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f24f8041aaa58b6f02620fd5e367712bce14f9b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+856478d46227c768c2d837f38e34e6e1a9261bf7")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProfiApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProfiApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

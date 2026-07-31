@@ -14,6 +14,7 @@ public static class ApiEndpoints
     public static void MapAll(WebApplication app)
     {
         MapAuth(app);
+        MapProfile(app);
     }
 
     static void MapAuth(WebApplication app)

@@ -15,6 +15,7 @@ public static class ApiEndpoints
     {
         MapAuth(app);
         MapProfile(app);
+        MapProfileData(app);
     }
 
     static void MapAuth(WebApplication app)
@@ -228,5 +229,32 @@ public static class ApiEndpoints
                 user.Phone
             });
         });
+    }
+
+    static void MapProfileData(WebApplication app)
+    {
+        var edu = app.MapGroup("/users/me/education").WithTags("Education").RequireAuthorization();
+
+        edu.MapPost("/", async (EducationRequest req, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var id = jwt.GetUserId(ctx.User);
+
+            var e = new Education
+            {
+                UserId = id,
+                EduTypeId = req.EduTypeId,
+                EduInstitutionId = req.EduInstitutionId,
+                DateStart = req.DateStart,
+                DateEnd = req.DateEnd,
+            };
+
+            db.Add(e);
+            await db.SaveChangesAsync();
+
+            return Api.Created($"/users/me/education/{e.Id}", 
+                new {e.Id, e.EduTypeId, e.EduInstitutionId, e.DateStart, e.DateEnd});
+        });
+
+        
     }
 }

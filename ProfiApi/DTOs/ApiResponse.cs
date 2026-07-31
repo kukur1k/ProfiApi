@@ -12,7 +12,7 @@ public static class Api
     public static IResult Ok<T>(T data, string message = "OK") =>
         Results.Ok(new ApiResponce<T>(true, data, message));
 
-    public static IResult Created<T>(T data, string uri) =>
+    public static IResult Created<T>(string uri, T data) =>
         Results.Created(uri, new ApiResponce<T>(true, data, "Создано"));
 
     public static IResult Fail(int status, string message, string errorCode) =>

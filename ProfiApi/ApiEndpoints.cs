@@ -301,7 +301,7 @@ public static class ApiEndpoints
             var uId = jwt.GetUserId(ctx.User);
 
             if (!await db.Technologies.AnyAsync(t => t.Id == req.TechnologyId))
-                return Api.NotFound("Технология не найдена");
+                return Api.NotFound($"Технология с id={req.TechnologyId} не найдена");
 
             if (await db.Skills.AnyAsync(s => s.TechnologyId == req.TechnologyId && s.UserId == uId))
                 return Api.Conflict("Навык уже добавлен");
@@ -334,7 +334,16 @@ public static class ApiEndpoints
                 return Api.Ok(new {skill.Id, skill.Skilllevel});
             });
         
-        
+        sk.MapDelete("/{id:int}", async (int id, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var uId = jwt.GetUserId(ctx.User);
+
+            var skill = await db.Skills.FirstOrDefaultAsync(s => s.UserId == uId && s.Id == id);
+            if (skill is null) return Api.NotFound("Данный навык не найден");
+            db.Remove(skill);
+            await db.SaveChangesAsync();
+            return Api.Ok<object?>(null, "Удалено");
+        });
 
     }
 }

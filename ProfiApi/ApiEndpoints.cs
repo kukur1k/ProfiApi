@@ -291,5 +291,33 @@ public static class ApiEndpoints
             await db.SaveChangesAsync();
             return Api.Ok<object?>(null, "Удалено");
         });
+
+
+
+        var sk = app.MapGroup("/users/me/skills/").WithTags("Skills").RequireAuthorization();
+
+        sk.MapPost("/", async (SkillRequest req, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var uId = jwt.GetUserId(ctx.User);
+
+            if (!await db.Technologies.AnyAsync(t => t.Id == req.TechnologyId))
+                return Api.NotFound("Технология не найдена");
+
+            if (await db.Skills.AnyAsync(s => s.TechnologyId == req.TechnologyId && s.UserId == uId))
+                return Api.Conflict("Навык уже добавлен");
+
+            var skill = new Skill
+            {
+                UserId = uId,
+                TechnologyId = req.TechnologyId,
+                Skilllevel = req.SkillLevel
+            };
+
+            db.Skills.Add(skill);
+            await db.SaveChangesAsync();
+            var tech = await db.Technologies.FindAsync(req.TechnologyId);
+            return Api.Created($"/users/me/skills/{skill.Id}", new{ technology = tech!.Name, skill.Skilllevel});
+        });
+
     }
 }

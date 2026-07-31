@@ -255,6 +255,29 @@ public static class ApiEndpoints
                 new {e.Id, e.EduTypeId, e.EduInstitutionId, e.DateStart, e.DateEnd});
         });
 
-        
+        edu.MapPut("/{id:int}",
+            async (int id, EducationRequest req, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+            {
+                var uId = jwt.GetUserId(ctx.User);
+
+                var e = await db.Educations.FirstOrDefaultAsync(e => e.Id == id && e.UserId == uId);
+                if (e is null) return Api.NotFound("Запись об образовании не найдена");
+
+                if (req.DateEnd.HasValue && req.DateEnd <= req.DateStart) return Api.BadRequest("Дата окончания должна быть позже даты начала");
+
+                if (req.EduTypeId.HasValue && !await db.EducaitonTypes.AnyAsync(t => t.Id == req.EduTypeId))
+                    return Api.BadRequest($"Тип образования с ID={req.EduTypeId} не существует");
+
+                if (req.EduInstitutionId != null)
+                    e.EduInstitutionId = req.EduInstitutionId;
+                if (req.EduTypeId != null)
+                    e.EduTypeId = req.EduTypeId;
+                if (req.DateStart != null)
+                    e.DateStart = req.DateStart;
+                if (req.DateEnd != null)
+                    e.DateEnd = req.DateEnd;
+                await db.SaveChangesAsync();
+                return Api.Ok(new {e.Id, e.EduInstitutionId, e.EduTypeId, e.DateStart, e.DateEnd});
+            });
     }
 }

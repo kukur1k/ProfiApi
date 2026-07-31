@@ -120,17 +120,80 @@ public static class ApiEndpoints
     }
 
     // ===Метод для создания рефреш токена===
-        static async Task<RefreshToken> CreateRefreshToken(int userId, AppDbContext db)
+    static async Task<RefreshToken> CreateRefreshToken(int userId, AppDbContext db)
+    {
+        var token = new RefreshToken
         {
-            var token = new RefreshToken
+            UserId = userId,
+            Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) +
+                    Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+            ExpiresAt = DateTimeOffset.UtcNow.AddDays(30),
+        };
+        db.RefreshTokens.Add(token);
+        await db.SaveChangesAsync();
+        return token;
+    }
+
+    static void MapProfile(WebApplication app)
+    {
+        var g = app.MapGroup("/users").WithTags("Profile").RequireAuthorization();
+
+        g.MapGet("/me", async (HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var id = jwt.GetUserId(ctx.User);
+            var user = await db.Users
+                .Include(u => u.IdRoleNavigation)
+                .Include(u => u.Ratings)
+                .Include(u => u.Skills).ThenInclude(s => s.Technology)
+                .Include(u => u.Skills).ThenInclude(s => s.Confirmations)
+                .Include(u => u.Educations).ThenInclude(e => e.EduInstitution)
+                .Include(u => u.Educations).ThenInclude(e => e.EduType)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user is null) return Api.NotFound("Пользователдь не найден");
+            var rating = user.Ratings.FirstOrDefault();
+            return Api.Ok(new
             {
-                UserId = userId,
-                Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) +
-                        Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
-                ExpiresAt = DateTimeOffset.UtcNow.AddDays(30),
-            };
-            db.RefreshTokens.Add(token);
-            await db.SaveChangesAsync();
-            return token;
-        }
+                user.Id,
+                user.LastName,
+                user.FirstName,
+                user.MiddleName,
+                user.Email,
+                user.Phone,
+                role = user.IdRoleNavigation?.Title,
+                user.RegisteredAt,
+                rating = rating is null
+                    ? null
+                    : new
+                    {
+                        rating.CompetencyIndex,
+                        rating.TrustLevel,
+                        rating.ConfirmsCount,
+                        rating.CalculateAt
+                    },
+                skills = user.Skills
+                    .OrderByDescending(s => s.Skilllevel)
+                    .Select(s => new
+                    {
+                        technology = s.Technology?.Name ?? "",
+                        level = s.Skilllevel,
+                        confirmsCount = s.Confirmations.Count(c => c.Status == "accepted"),
+                        hasConfirms = s.Confirmations.Any(c => c.Status == "accepted")
+                    }),
+                confirmations = user.ConfirmationTargets.Select(c => new
+                {
+                    name = db.Users.FirstOrDefault(u => u.Id == c.TargetId).LastName,
+                    technology = c.Skill.Technology.Name,
+                    dateConfirm = c.RespondedAt ?? DateTimeOffset.UtcNow
+                }),
+                educations = user.Educations.Select(ed => new
+                {
+                    type = ed.EduType.Title,
+                    eduInstitution = ed.EduInstitution.Title,
+                    dates = ed.DateStart.Value.Year.ToString() + "-" + ed.DateEnd.Value.Year.ToString() ?? "н.в"
+                })
+
+            });
+        });
+    }
 }

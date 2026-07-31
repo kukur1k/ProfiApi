@@ -196,5 +196,37 @@ public static class ApiEndpoints
 
             });
         });
+        
+        g.MapPut("/me", async(UpdateProfileRequest req, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var id = jwt.GetUserId(ctx.User);
+            var user = await db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user is null) return Api.NotFound("Пользователь не найден");
+
+            
+            if (req.Phone is not null && await db.Users.AnyAsync(u => u.Phone == req.Phone && u.Id != id))
+                return Api.Conflict("Данный телефон уже заркгкстрирован");
+
+            if (req.FirstName is not null)
+                user.FirstName = req.FirstName;
+            if (req.LastName is not null)
+                user.LastName = req.LastName;
+            if (req.MiddleName is not null)
+                user.MiddleName = req.MiddleName;
+            if (req.Phone is not null)
+                user.Phone = req.Phone;
+
+            await db.SaveChangesAsync();
+
+            return Api.Ok(new
+            {
+                user.Id,
+                user.Email,
+                user.LastName,
+                user.FirstName,
+                user.MiddleName,
+                user.Phone
+            });
+        });
     }
 }

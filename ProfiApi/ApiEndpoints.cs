@@ -319,5 +319,22 @@ public static class ApiEndpoints
             return Api.Created($"/users/me/skills/{skill.Id}", new{ technology = tech!.Name, skill.Skilllevel});
         });
 
+        sk.MapPut("/{id:int}",
+            async (int id, SkillRequest req, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+            {
+                var uId = jwt.GetUserId(ctx.User);
+
+                var skill = await db.Skills.FirstOrDefaultAsync(s => s.UserId == uId && s.Id == id);
+                if (skill is null) return Api.NotFound("Данный навык не найден");
+                if (req.SkillLevel < 0 || req.SkillLevel > 10)
+                    return Api.BadRequest("Уровень навыка должен быть от 0 до 10");
+
+                skill.Skilllevel = req.SkillLevel;
+                await db.SaveChangesAsync();
+                return Api.Ok(new {skill.Id, skill.Skilllevel});
+            });
+        
+        
+
     }
 }

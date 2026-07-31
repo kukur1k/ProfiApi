@@ -279,5 +279,17 @@ public static class ApiEndpoints
                 await db.SaveChangesAsync();
                 return Api.Ok(new {e.Id, e.EduInstitutionId, e.EduTypeId, e.DateStart, e.DateEnd});
             });
+        
+        edu.MapDelete("/{id:int}", async (int id, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var uId = jwt.GetUserId(ctx.User);
+
+            var e = await db.Educations.FirstOrDefaultAsync(e => e.Id == id && e.UserId == uId);
+            if (e is null) return Api.NotFound("Запись об образовании не найдена");
+
+            db.Remove(e);
+            await db.SaveChangesAsync();
+            return Api.Ok<object?>(null, "Удалено");
+        });
     }
 }

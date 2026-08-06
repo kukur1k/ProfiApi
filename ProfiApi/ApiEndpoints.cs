@@ -16,6 +16,7 @@ public static class ApiEndpoints
         MapAuth(app);
         MapProfile(app);
         MapProfileData(app);
+        MapDashboard(app);
     }
 
     static void MapAuth(WebApplication app)
@@ -278,7 +279,7 @@ public static class ApiEndpoints
                     e.DateEnd = req.DateEnd;
                 await db.SaveChangesAsync();
                 return Api.Ok(new {e.Id, e.EduInstitutionId, e.EduTypeId, e.DateStart, e.DateEnd});
-            });
+            }); 
         
         edu.MapDelete("/{id:int}", async (int id, HttpContext ctx, AppDbContext db, JwtService jwt) =>
         {
@@ -345,5 +346,69 @@ public static class ApiEndpoints
             return Api.Ok<object?>(null, "Удалено");
         });
 
+    }
+
+    static void MapDashboard(WebApplication app)
+    {
+        var g = app.MapGroup("/dashboard").WithTags("Dashboard").RequireAuthorization();
+
+        g.MapGet("/summary",async (AppDbContext db) =>
+        {
+            // всего пользователей в сети
+            var totaActyvity = await db.Users.CountAsync(u => u.IdRole != null);
+
+            var yesterday = DateTime.UtcNow.AddDays(-1);
+            var weekAgo = DateTime.UtcNow.AddDays(-7);
+
+            // суточный прирост пользователей
+            var deltaUsers = await db.Users.CountAsync(u => u.RegisteredAt >= yesterday);
+            // недельный прирост пользователей
+            var weeklyGrowthUsers = await db.Users.CountAsync(u => u.RegisteredAt >= weekAgo);
+
+            // средний рейтинг
+            var avgRating = await db.Ratings.AverageAsync(r => (double?)r.CompetencyIndex) ?? 0;
+            // средний рейтинг на той неделе
+            var avgRatingLastWeek = await db.Ratings
+                .Where(r => r.CalculateAt <= weekAgo)
+                .AverageAsync(r => (double?)r.CompetencyIndex) ?? 0; 
+            // средний рейтинг вчера
+            var avgRatingYesterday = await db.Ratings
+                .Where(r => r.CalculateAt >= yesterday)
+                .AverageAsync(r => (double?)r.CompetencyIndex) ?? 0; 
+            // Недельный прирос рейтинга
+            var ratingDeltaWeek = Math.Round(avgRating - avgRatingLastWeek, 2);
+            var ratingDelta = Math.Round(avgRating - avgRatingYesterday, 2);
+
+
+            // средний уровень соответствия
+            var avgTrust = await db.Ratings.AverageAsync(r => (double?)r.TrustLevel) ?? 0;
+            // средний уровень соответствия на той неделе
+            var avgTrustLastWeek = await db.Ratings
+                .Where(r => r.CalculateAt <= weekAgo)
+                .AverageAsync(r => (double?)r.TrustLevel) ?? 0; 
+            // средний уровень соответствия вчера
+            var avgTrustYesterday = await db.Ratings
+                .Where(r => r.CalculateAt >= yesterday)
+                .AverageAsync(r => (double?)r.TrustLevel) ?? 0; 
+            // недельный прирос уровня соответствия
+            var vacancyDeltaWeek = Math.Round(avgTrust - avgTrustLastWeek, 2);
+            // дневной прирос уровня соответствия
+            var vacancyDelta = Math.Round(avgTrust - avgTrustYesterday, 2);
+            
+
+            return Api.Ok(new
+            {
+                ActiveProfiles = totaActyvity,
+                ProfilesDelta = deltaUsers,
+                ProfilesDeltaWeek = weeklyGrowthUsers,
+                AvgRating = Math.Round(avgRating, 2),
+                AvgRatingDelta = ratingDelta,
+                AvgRatingDeltaWeek = ratingDeltaWeek,
+                VacancyMatch = Math.Round(avgTrust, 2),
+                VacancyMatchDelta = vacancyDelta,
+                VacancyMatchDeltaWeek = vacancyDeltaWeek
+            });
+
+        });
     }
 }

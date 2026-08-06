@@ -376,8 +376,8 @@ public static class ApiEndpoints
                 .Where(r => r.CalculateAt >= yesterday)
                 .AverageAsync(r => (double?)r.CompetencyIndex) ?? 0; 
             // Недельный прирос рейтинга
-            var ratingDeltaWeek = Math.Round(avgRating - avgRatingLastWeek, 2);
-            var ratingDelta = Math.Round(avgRating - avgRatingYesterday, 2);
+            var ratingDeltaWeek = Math.Round((avgRating - avgRatingLastWeek) /10, 2);
+            var ratingDelta = Math.Round((avgRating - avgRatingYesterday) /10, 2);
 
 
             // средний уровень соответствия
@@ -401,7 +401,7 @@ public static class ApiEndpoints
                 ActiveProfiles = totaActyvity,
                 ProfilesDelta = deltaUsers,
                 ProfilesDeltaWeek = weeklyGrowthUsers,
-                AvgRating = Math.Round(avgRating, 2),
+                AvgRating = Math.Round(avgRating / 10, 2),
                 AvgRatingDelta = ratingDelta,
                 AvgRatingDeltaWeek = ratingDeltaWeek,
                 VacancyMatch = Math.Round(avgTrust, 2),

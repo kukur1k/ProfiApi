@@ -18,6 +18,7 @@ public static class ApiEndpoints
         MapProfileData(app);
         MapDashboard(app);
         MapSkills(app);
+        MapSearch(app);
     }
 
     static void MapAuth(WebApplication app)
@@ -437,4 +438,98 @@ public static class ApiEndpoints
             return Api.Ok(new {Items = skills});
         });
     }
+
+    static void MapSearch(WebApplication app)
+    {
+        var g = app.MapGroup("/users").WithTags("Search").RequireAuthorization();
+
+        g.MapGet("/search", async (
+            AppDbContext db,
+            List<string>? technology = null,
+            int milLevel = 0,
+            int maxLevel = 10,
+            double minRating = 0,
+            int minExp = 0) =>
+        {
+            // общая часть запроса
+            var query = db.Users
+                .Include(u => u.Skills).ThenInclude(s => s.Technology)
+                .Include(u => u.Ratings)
+                .Include(u => u.Experiences)
+                .Where(u => u.IdRole != null)
+                .AsQueryable();
+
+            // поиск по технологии
+            if (technology is not null)
+            {
+                query = query.Where(u => 
+                    u.Skills.Any(s => 
+                    technology.Any(t =>
+                        s.Technology!.Name.ToLower().Contains(t.ToLower())) 
+                    && s.Skilllevel >= milLevel
+                    && s.Skilllevel <= milLevel));
+            }
+
+            // поиск по технологии
+            if (minRating > 0)
+            {
+                query = query.Where(u => 
+                    u.Ratings.Any(r => (double)r.CompetencyIndex >= minRating));
+            }
+
+            // ищем суммарный стаж
+
+            // if (minExp > 0)
+            // {
+            //     query = query.Where(u => 
+            //         u.Experiences.Sum(e => 
+            //             (e.DateEnd ?? DateOnly.FromDateTime(DateTime.Now))
+            //             .ToDateTime(TimeOnly.MinValue) - e.DateStart.DayNumber
+            //         ) >= minExp);
+            // }
+
+            var total = await query.CountAsync();
+
+            // взяли 2 рейтинга первых, и на их основе далее просчитаем рост это, или падение (тренд)
+            var Items = await query
+                .Select(u => new
+                {
+                    Id = u.Id,
+                    DisplayName = u.LastName + " " + u.FirstName!.Substring(0, 1) + ".",
+                    Skills = u.Skills
+                        .OrderByDescending(s => s.Skilllevel)
+                        .Select(s => $"{s.Technology}:{s.Skilllevel}"),
+                    CompetencyIndex = u.Ratings.Max(r => (double?)r.CompetencyIndex) ?? 0,
+                    TrustLevel = u.Ratings.Max(r => (double?)r.TrustLevel) ?? 0,
+                    CurrentRating = u.Ratings.OrderByDescending(r => r.CalculateAt).FirstOrDefault(),
+                    PreviousRating = u.Ratings.OrderByDescending(r => r.CalculateAt).Skip(1).FirstOrDefault()
+                }).ToListAsync();
+            
+            var result = Items.Select(i => new
+            {
+                Id = i.Id,
+                DisplayName = i.DisplayName,
+                Skills = i.Skills,
+                CompetencyIndex = i.CompetencyIndex,
+                TrustLevel = i.TrustLevel,
+                Trend = GetTrend(i.CurrentRating?.CompetencyIndex, i.PreviousRating?.CompetencyIndex)
+            });
+
+            return Api.Ok(new {Total = total, Items = result});
+
+        });
+    }
+
+
+    private static string GetTrend(decimal? current, decimal? previous)
+    {
+        if (!current.HasValue || !previous.HasValue) return "➡️"; // stable;
+
+        var diff = current - previous;
+
+        if (diff > 0) return "📈"; // up
+        if (diff < 0) return "📉"; // down
+        return "➡️"; // stable;
+    }
+
 }

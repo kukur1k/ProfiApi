@@ -427,7 +427,7 @@ public static class ApiEndpoints
                 .GroupBy(s => new {s.TechnologyId, s.Technology!.Name})
                 .Select(g => new {g.Key.Name,
                     Count = g.Count(),
-                    Percent = Math.Round((double)g.Count() / totalCount * 100, 1)})
+                    Percent = Math.Round((double)g.Count() / totalCount * 100, 2)})
                 .OrderByDescending(x => x.Count)
                     .Take(5)
                     .ToListAsync();

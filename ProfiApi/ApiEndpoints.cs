@@ -499,7 +499,7 @@ public static class ApiEndpoints
                     DisplayName = u.LastName + " " + u.FirstName!.Substring(0, 1) + ".",
                     Skills = u.Skills
                         .OrderByDescending(s => s.Skilllevel)
-                        .Select(s => $"{s.Technology!.Name}:{s.Skilllevel}"),
+                        .Select(s => $"{s.Technology!.Name}:{s.Skilllevel}").ToArray(),
                     CompetencyIndex = u.Ratings.Max(r => (double?)r.CompetencyIndex) ?? 0,
                     TrustLevel = u.Ratings.Max(r => (double?)r.TrustLevel) ?? 0,
                     CurrentRating = u.Ratings.OrderByDescending(r => r.CalculateAt).FirstOrDefault(),

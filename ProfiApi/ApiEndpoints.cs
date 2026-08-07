@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfiApi.Data;
 using ProfiApi.DTOs;
@@ -445,8 +446,8 @@ public static class ApiEndpoints
 
         g.MapGet("/search", async (
             AppDbContext db,
-            List<string>? technology = null,
-            int milLevel = 0,
+            [FromQuery] string[]? technology = null,
+            int minLevel = 0,
             int maxLevel = 10,
             double minRating = 0,
             int minExp = 0) =>
@@ -466,8 +467,8 @@ public static class ApiEndpoints
                     u.Skills.Any(s => 
                     technology.Any(t =>
                         s.Technology!.Name.ToLower().Contains(t.ToLower())) 
-                    && s.Skilllevel >= milLevel
-                    && s.Skilllevel <= milLevel));
+                    && s.Skilllevel >= minLevel
+                    && s.Skilllevel <= maxLevel));
             }
 
             // поиск по технологии
@@ -498,7 +499,7 @@ public static class ApiEndpoints
                     DisplayName = u.LastName + " " + u.FirstName!.Substring(0, 1) + ".",
                     Skills = u.Skills
                         .OrderByDescending(s => s.Skilllevel)
-                        .Select(s => $"{s.Technology}:{s.Skilllevel}"),
+                        .Select(s => $"{s.Technology!.Name}:{s.Skilllevel}"),
                     CompetencyIndex = u.Ratings.Max(r => (double?)r.CompetencyIndex) ?? 0,
                     TrustLevel = u.Ratings.Max(r => (double?)r.TrustLevel) ?? 0,
                     CurrentRating = u.Ratings.OrderByDescending(r => r.CalculateAt).FirstOrDefault(),
@@ -525,10 +526,10 @@ public static class ApiEndpoints
     {
         if (!current.HasValue || !previous.HasValue) return "➡️"; // stable;
 
-        var diff = current - previous;
+        var diff = current.Value - previous.Value;
 
-        if (diff > 0) return "📈"; // up
-        if (diff < 0) return "📉"; // down
+        if (diff > 0.5m) return "📈"; // up
+        if (diff < 0.5m) return "📉"; // down
         return "➡️"; // stable;
     }
 

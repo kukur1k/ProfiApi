@@ -17,6 +17,7 @@ public static class ApiEndpoints
         MapProfile(app);
         MapProfileData(app);
         MapDashboard(app);
+        MapSkills(app);
     }
 
     static void MapAuth(WebApplication app)
@@ -409,6 +410,27 @@ public static class ApiEndpoints
                 VacancyMatchDeltaWeek = vacancyDeltaWeek
             });
 
+        });
+    }
+
+    static async Task MapSkills(WebApplication app)
+    {
+        var g = app.MapGroup("/skills").WithTags("Skills").RequireAuthorization();
+
+        g.MapGet("/top", async (AppDbContext db) =>
+        {
+            var totalCount = await db.Skills.CountAsync();
+            if (totalCount == 0) return Api.Ok(new { Items = Array.Empty<object>() });
+
+            var skills = await db.Skills
+                .Include(s => s.Technology)
+                .GroupBy(s => new {s.TechnologyId, s.Technology!.Name})
+                .Select(g => new {g.Key.Name, Count = g.Count()})
+                .OrderByDescending(x => x.Count)
+                    .Take(5)
+                    .ToListAsync();
+            
+            return Api.Ok(new { Items = skills});
         });
     }
 }

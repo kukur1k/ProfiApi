@@ -425,12 +425,16 @@ public static class ApiEndpoints
             var skills = await db.Skills
                 .Include(s => s.Technology)
                 .GroupBy(s => new {s.TechnologyId, s.Technology!.Name})
-                .Select(g => new {g.Key.Name, Count = g.Count()})
+                .Select(g => new {g.Key.Name,
+                    Count = g.Count(),
+                    Percent = Math.Round((double)g.Count() / totalCount * 100, 1)})
                 .OrderByDescending(x => x.Count)
                     .Take(5)
                     .ToListAsync();
             
-            return Api.Ok(new { Items = skills});
+
+
+            return Api.Ok(new {Items = skills});
         });
     }
 }

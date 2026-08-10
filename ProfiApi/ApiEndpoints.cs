@@ -438,6 +438,20 @@ public static class ApiEndpoints
 
             return Api.Ok(new {Items = skills});
         });
+
+        g.MapGet("/suggest", async (string? q, AppDbContext db) =>
+        {
+            if (string.IsNullOrWhiteSpace(q) || q.Length <= 1)
+                return Api.Ok(Array.Empty<string>());
+
+            var result = await db.Technologies
+                .Where(t => t.Name.ToLower().StartsWith(q.ToLower()))
+                .Select(t => t.Name)
+                .Take(8)
+                .ToListAsync();
+            
+            return Api.Ok(result);
+        });
     }
 
     static void MapSearch(WebApplication app)

@@ -460,7 +460,7 @@ public static class ApiEndpoints
 
         g.MapGet("/search", async (
             AppDbContext db,
-            [FromQuery] string[]? technology = null,
+            [FromQuery] string? technology = null,
             int minLevel = 0,
             int maxLevel = 10,
             double minRating = 0,
@@ -475,11 +475,12 @@ public static class ApiEndpoints
                 .AsQueryable();
 
             // поиск по технологии
-            if (technology is not null)
-            {
+            if (!string.IsNullOrWhiteSpace(technology))
+            {   
+                var techs = technology.Split(',', StringSplitOptions.RemoveEmptyEntries);
                 query = query.Where(u => 
                     u.Skills.Any(s => 
-                    technology.Any(t =>
+                    techs.Any(t =>
                         s.Technology!.Name.ToLower().Contains(t.ToLower())) 
                     && s.Skilllevel >= minLevel
                     && s.Skilllevel <= maxLevel));

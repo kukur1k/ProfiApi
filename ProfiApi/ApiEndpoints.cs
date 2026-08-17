@@ -233,6 +233,88 @@ public static class ApiEndpoints
                 user.Phone
             });
         });
+
+        g.MapGet("/{id:int}", async (int id, HttpContext ctx, AppDbContext db, JwtService jwt, string? mode) =>
+        {
+            var user = await db.Users
+                .Include(u => u.IdRoleNavigation)
+                .Include(u => u.Skills).ThenInclude(s => s.Technology)
+                .Include(u => u.Skills).ThenInclude(r => r.Confirmations)
+                .Include(u => u.Experiences).ThenInclude(e => e.EmpType)
+                .Include(u => u.Experiences).ThenInclude(e => e.Position)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user is null) return Api.NotFound("Пользователь не найден");
+
+            var rating = user.Ratings.FirstOrDefault();
+
+            if (mode == "employer")
+            {
+                return Api.Ok(new
+                {
+                    PublicId = $"ITP-{user.Id:D5}",
+                    DisplayName = 
+                        $"{user.LastName} {user.FirstName?[0]}.{(user.MiddleName?.Length > 0 ? user.MiddleName[0] + "." : "")} (анонимный профиль)",
+                    IsActive = true,
+                    CompetencyIndex = rating?.CompetencyIndex ?? 0,
+                    TrustLevel = rating?.TrustLevel ?? 0,
+                    ConfirmsCount = rating?.ConfirmsCount ?? 0,
+                    SkillsCount = user.Skills.Count,
+                    Skills = user.Skills
+                        .OrderByDescending(s => s.Skilllevel)
+                        .Select(s => new
+                        {
+                            Technology = s.Technology?.Name ?? "",
+                            Level = s.Skilllevel,
+                            ConfirmsCount = s.Confirmations.Count(c => c.Status == "accepted"),
+                            HasConfirms = s.Confirmations.Any(c => c.Status == "accepted")
+                        }),
+                    Experience = user.Experiences
+                        .OrderByDescending(e => e.DateEnd == null)
+                        .ThenByDescending(e => e.DateStart)
+                        .Select(e => new
+                        {
+                            DateStart = e.DateStart?.ToString("yyyy"),
+                            DateEnd = e.DateEnd?.ToString("yyyy") ?? "н.в",
+                            IsCurrent = e.DateEnd == null,
+                            EmpType = e.EmpType?.Title ?? "",
+                            Position = e.Position?.Title ?? ""
+                        })
+                });
+            }
+
+            return Api.Ok(new
+            {
+                user.Id,
+                user.LastName,
+                user.FirstName,
+                user.MiddleName,
+                user.Email,
+                user.Phone,
+                Role = user.IdRoleNavigation?.Title,
+                user.RegisteredAt,
+                CompetencyIndex = rating?.CompetencyIndex ?? 0,
+                TrustLevel = rating?.TrustLevel ?? 0,
+                ConfirmsCount = rating?.ConfirmsCount ?? 0,
+                Skills = user.Skills
+                    .OrderByDescending(s => s.Skilllevel)
+                    .Select(s => new
+                    {
+                        Technology = s.Technology?.Name ?? "",
+                        Level = s.Skilllevel,
+                        ConfirmsCount = s.Confirmations.Count(c => c.Status == "accepted")
+                    }),
+                Experience = user.Experiences
+                    .Select(e => new
+                    {
+                        DateStart = e.DateStart?.ToString("yyyy"),
+                        DateEnd = e.DateEnd?.ToString("yyyy") ?? "н.в.",
+                        IsCurrent = e.DateEnd == null,
+                        EmpType = e.EmpType?.Title ?? "",
+                        Position = e.Position?.Title ?? ""
+                    })
+            });
+        });
     }
 
     static void MapProfileData(WebApplication app)

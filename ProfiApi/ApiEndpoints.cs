@@ -238,6 +238,7 @@ public static class ApiEndpoints
         {
             var user = await db.Users
                 .Include(u => u.IdRoleNavigation)
+                .Include(u => u.Ratings)
                 .Include(u => u.Skills).ThenInclude(s => s.Technology)
                 .Include(u => u.Skills).ThenInclude(r => r.Confirmations)
                 .Include(u => u.Experiences).ThenInclude(e => e.EmpType)

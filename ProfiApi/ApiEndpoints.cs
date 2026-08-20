@@ -680,6 +680,57 @@ public static class ApiEndpoints
 
             return Api.Ok<object?>(null, "Подборка удалена");
         });
+
+        // добавление кандидата в подборку
+        g.MapPost("/{id:int}/candidates", async (int id,
+            ShortlistAddCandidateRequest req,
+            HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var uid = jwt.GetUserId(ctx.User);
+
+            if (!await db.Shortlists.AnyAsync(s => s.Id == id && s.OwnerId == uid))
+                return Api.NotFound("Подборка не найдена");
+
+            if (!await db.Users.AnyAsync(u => u.Id == req.UserId))
+                return Api.NotFound("Пользователь не найден");
+
+            if (await db.ShortlistCandidates
+                    .AnyAsync(sc => sc.ShortlistId == id && sc.UserId == req.UserId))
+                return Api.Conflict("Кандидат уже в подборке");
+
+            var sc = new ShortlistCandidate
+            {
+                ShortlistId = id,
+                UserId = req.UserId,
+                Note = req.Note,
+                AddedAt = DateTime.UtcNow
+            };
+
+            db.ShortlistCandidates.Add(sc);
+            await db.SaveChangesAsync();
+
+            return Api.Ok(new { sc.ShortlistId, sc.UserId, sc.AddedAt });
+        });
+
+        // удаление кандидата из подборки
+        g.MapDelete("/{id:int}/candidates/{userId:int}", async (int id, int userId,
+            HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var uid = jwt.GetUserId(ctx.User);
+
+            if (!await db.Shortlists.AnyAsync(s => s.Id == id && s.OwnerId == uid))
+                return Api.NotFound("Подборка не найдена");
+
+            var sc = await db.ShortlistCandidates
+                .FirstOrDefaultAsync(x => x.ShortlistId == id && x.UserId == userId);
+
+            if (sc is null) return Api.NotFound("Кандидат не найден в подборке");
+
+            db.ShortlistCandidates.Remove(sc);
+            await db.SaveChangesAsync();
+
+            return Api.Ok<object?>(null, "Кандидат удалён из подборки");
+        });
     }
 
 }

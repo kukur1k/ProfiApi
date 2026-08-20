@@ -665,6 +665,21 @@ public static class ApiEndpoints
 
             return Api.Ok(list);
         });
+
+
+        g.MapDelete("/{id:int}", async (int id, HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var uid = jwt.GetUserId(ctx.User);
+            var s = await db.Shortlists
+                .FirstOrDefaultAsync(x => x.Id == id && x.OwnerId == uid);
+
+            if (s is null) return Api.NotFound("Подборка не найдена");
+
+            db.Shortlists.Remove(s);
+            await db.SaveChangesAsync();
+
+            return Api.Ok<object?>(null, "Подборка удалена");
+        });
     }
 
 }

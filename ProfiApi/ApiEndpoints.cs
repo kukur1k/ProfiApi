@@ -631,4 +631,39 @@ public static class ApiEndpoints
         return "➡️"; // stable;
     }
 
+
+    static void MapShortlists(WebApplication app)
+    {
+        var g = app.MapGroup("/shortlists").WithTags("Shortlists").RequireAuthorization();
+
+        // GET /shortlists
+        g.MapGet("/", async (HttpContext ctx, AppDbContext db, JwtService jwt) =>
+        {
+            var uId = jwt.GetUserId(ctx.User);
+            var list = await db.Shortlists
+                .Where(s => s.OwnerId == uId)
+                .OrderByDescending(s => s.CreatedAt)
+                
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Name,
+                    s.Description,
+                    s.CreatedAt,
+                    CandidatesCount = s.ShortlistCandidates.Count,
+                    Candidates = s.ShortlistCandidates.Select(sl => new
+                    {
+                        PublicId = $"ITP-{sl.UserId:D5}",
+                      
+                        Rating = sl.User.Ratings
+                            .Select(r => (double?)r.CompetencyIndex)
+                            .Max() ?? 0
+                    })
+                })
+                .ToListAsync();
+
+            return Api.Ok(list);
+        });
+    }
+
 }

@@ -20,6 +20,7 @@ public static class ApiEndpoints
         MapDashboard(app);
         MapSkills(app);
         MapSearch(app);
+        MapShortlists(app);
     }
 
     static void MapAuth(WebApplication app)

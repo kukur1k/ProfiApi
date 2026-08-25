@@ -667,6 +667,19 @@ public static class ApiEndpoints
         });
 
 
+        g.MapPost("/", async (HttpContent ctx, AppDbContext db, JwtService jwt, ShortlistRequest req) =>
+        {
+            var sl = new Shortlist
+            {
+                Name = req.Name,
+                Description = req.Description
+            };
+
+            await db.Shortlists.AddAsync(sl);
+            return Api.Created($"/shortlists/{sl.Id}", new {sl.Id, sl.Name});
+        });
+
+
         g.MapDelete("/{id:int}", async (int id, HttpContext ctx, AppDbContext db, JwtService jwt) =>
         {
             var uid = jwt.GetUserId(ctx.User);

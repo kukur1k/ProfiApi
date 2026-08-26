@@ -667,7 +667,7 @@ public static class ApiEndpoints
         });
 
 
-        g.MapPost("/", async (HttpContent ctx, AppDbContext db, JwtService jwt, ShortlistRequest req) =>
+        g.MapPost("/", async (HttpContext ctx, AppDbContext db, JwtService jwt, ShortlistRequest req) =>
         {
             var sl = new Shortlist
             {
@@ -679,12 +679,14 @@ public static class ApiEndpoints
             return Api.Created($"/shortlists/{sl.Id}", new {sl.Id, sl.Name});
         });
 
-        g.MapPut("/{id:int}", async (HttpContext ctx, AppDbContext db, JwtService jwt, int id, string newName) =>
+        g.MapPut("/{id:int}", async (int id, string newName, HttpContext ctx, AppDbContext db, JwtService jwt) =>
         {
             var sl = await db.Shortlists.FirstOrDefaultAsync(x => x.Id == id);
+            if (sl is null)
+                return Results.NotFound(new { error = "Подборка не найдена" });
 
             sl.Name = newName;
-            db.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return Api.Ok(new {sl.Id, sl.Name});
 
         });
@@ -755,7 +757,7 @@ public static class ApiEndpoints
             return Api.Ok<object?>(null, "Кандидат удалён из подборки");
         });
 
-        g.MapDelete("/{id:int}", async (HttpContext ctx, JwtService jwt, AppDbContext db, int id) =>
+        g.MapDelete("/{id:int}", async (int id, HttpContext ctx, JwtService jwt, AppDbContext db ) =>
         {
            var uid = jwt.GetUserId(ctx.User);
 

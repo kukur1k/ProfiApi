@@ -679,7 +679,7 @@ public static class ApiEndpoints
             return Api.Created($"/shortlists/{sl.Id}", new {sl.Id, sl.Name});
         });
 
-        g.MapPut("/{id:int}", async (HttpContent ctx, AppDbContext db, JwtService jwt, int id, string newName) =>
+        g.MapPut("/{id:int}", async (HttpContext ctx, AppDbContext db, JwtService jwt, int id, string newName) =>
         {
             var sl = await db.Shortlists.FirstOrDefaultAsync(x => x.Id == id);
 

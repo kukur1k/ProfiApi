@@ -757,16 +757,6 @@ public static class ApiEndpoints
             return Api.Ok<object?>(null, "Кандидат удалён из подборки");
         });
 
-        g.MapDelete("/{id:int}", async (int id, HttpContext ctx, JwtService jwt, AppDbContext db ) =>
-        {
-           var uid = jwt.GetUserId(ctx.User);
-
-            var sl = await db.Shortlists.FirstOrDefaultAsync(x => x.Id == id);
-
-            db.Shortlists.Remove(sl);
-            await db.SaveChangesAsync();
-
-        });
     }
 
 }

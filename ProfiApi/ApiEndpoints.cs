@@ -669,10 +669,13 @@ public static class ApiEndpoints
 
         g.MapPost("/", async (HttpContext ctx, AppDbContext db, JwtService jwt, ShortlistRequest req) =>
         {
+            var uId = jwt.GetUserId(ctx.User);
             var sl = new Shortlist
             {
+                OwnerId = uId,
                 Name = req.Name,
-                Description = req.Description
+                Description = req.Description,
+                CreatedAt = DateTime.Now
             };
 
             await db.Shortlists.AddAsync(sl);

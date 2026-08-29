@@ -627,8 +627,8 @@ public static class ApiEndpoints
 
         var diff = current.Value - previous.Value;
 
-        if (diff > 0.5m) return "📈"; // up
-        if (diff < 0.5m) return "📉"; // down
+        if (diff > 0.1m) return "📈"; // up
+        if (diff < 0.1m) return "📉"; // down
         return "➡️"; // stable;
     }
 

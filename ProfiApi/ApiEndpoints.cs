@@ -640,6 +640,7 @@ public static class ApiEndpoints
         // GET /shortlists
         g.MapGet("/", async (HttpContext ctx, AppDbContext db, JwtService jwt) =>
         {
+            
             var uId = jwt.GetUserId(ctx.User);
             var list = await db.Shortlists
                 .Where(s => s.OwnerId == uId)

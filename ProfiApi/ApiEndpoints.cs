@@ -189,7 +189,7 @@ public static class ApiEndpoints
                     }),
                 confirmations = user.ConfirmationTargets.Select(c => new
                 {
-                    name = db.Users.FirstOrDefault(u => u.Id == c.TargetId).LastName,
+                    name = db.Users.FirstOrDefault(u => u.Id == c.RequesterId).LastName,
                     technology = c.Skill.Technology.Name,
                     dateConfirm = c.RespondedAt ?? DateTimeOffset.UtcNow
                 }),

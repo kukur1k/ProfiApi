@@ -21,6 +21,7 @@ public static class ApiEndpoints
         MapSkills(app);
         MapSearch(app);
         MapShortlists(app);
+        MapMobileProfile(app);
     }
 
     static void MapAuth(WebApplication app)
@@ -433,6 +434,34 @@ public static class ApiEndpoints
             return Api.Ok<object?>(null, "Удалено");
         });
 
+    }
+
+    static void MapMobileProfile(WebApplication app)
+    {
+        var g = app.MapGroup("/users/me").WithTags("Mobile").RequireAuthorization();
+
+        g.MapGet("/notifications", async (HttpContext ctx, AppDbContext db,
+            JwtService jwt, int limit = 5) =>
+        {
+            var uId = jwt.GetUserId(ctx.User);
+
+            var notif = await db.Notifications
+                .Where(n => n.UserId == uId)
+                .OrderByDescending(n => n.CreatedAt)
+                .Take(limit)
+                .Select(n => new
+                {
+                    n.Id,
+                    n.Type,
+                    n.Title,
+                    n.Body,
+                    n.IsRead,
+                    n.RelatedId,
+                    n.CreatedAt
+                }).ToListAsync();
+
+            return Api.Ok(notif);
+        });
     }
 
     static void MapDashboard(WebApplication app)

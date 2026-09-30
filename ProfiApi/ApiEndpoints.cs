@@ -452,6 +452,7 @@ public static class ApiEndpoints
                 .Select(n => new
                 {
                     n.Id,
+                    n.UserId,
                     n.Type,
                     n.Title,
                     n.Body,

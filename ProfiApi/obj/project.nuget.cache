@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "0AC985NBHLA=",
+  "dgSpecHash": "tK/8jVD2+LE=",
   "success": true,
   "projectFilePath": "D:\\C#_Project\\PROFI_TRENNING\\ProfiApi\\ProfiApi\\ProfiApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pc\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\10.0.10\\microsoft.aspnetcore.authentication.jwtbearer.10.0.10.nupkg.sha512",
+    "C:\\Users\\pc\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\10.0.0-preview.6.25358.103\\microsoft.aspnetcore.identity.entityframeworkcore.10.0.0-preview.6.25358.103.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\microsoft.bcl.cryptography\\10.0.2\\microsoft.bcl.cryptography.10.0.2.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.11.0\\microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",
